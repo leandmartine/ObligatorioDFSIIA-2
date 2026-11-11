@@ -1,10 +1,14 @@
+import "./App.css";
 import "./styles/estilos.css";
+import Contenido from "./components/Contenido.jsx";
+import Menu from "./components/Menu.jsx";
 
 const App = () => {
   return (
-    <div>
-      <h2>Dashboard en construcción</h2>
-    </div>
+    <>
+      <Menu />
+      <Contenido></Contenido>
+    </>
   );
 };
 

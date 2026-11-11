@@ -1,12 +1,17 @@
+import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import App from "../App.jsx";
+import Login from "./Login.jsx";
+import Registro from "./Registro.jsx";
+import Dashboard from "./Dashboard.jsx";
 
 const Rutas = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="dashboard" element={<App />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="login" element={<Login />} />
+        <Route path="registro" element={<Registro />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
