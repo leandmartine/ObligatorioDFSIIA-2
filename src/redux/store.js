@@ -5,8 +5,6 @@ import loadingSlice from "./features/loadingSlice.js";
 
 export const store = configureStore({
   reducer: {
-    publicacionesSlice,
-    categoriasSlice,
-    loadingSlice,
+    publicacionesSlice, categoriasSlice, loadingSlice,
   },
 });
