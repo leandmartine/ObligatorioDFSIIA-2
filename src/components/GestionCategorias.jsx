@@ -20,6 +20,7 @@ import {
 } from "../services/categoriasServices.js";
 import { obtenerRolesApi } from "../services/authServices.js";
 import { extraerMensajeError } from "../utils/utils.js";
+import ModalConfirmacion from "./ModalConfirmacion.jsx";
 
 const GestionCategorias = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const GestionCategorias = () => {
   const [idEditando, setIdEditando] = useState(null);
   const [nombreEditando, setNombreEditando] = useState("");
   const [descripcionEditando, setDescripcionEditando] = useState("");
+  const [categoriaAEliminar, setCategoriaAEliminar] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -140,11 +142,10 @@ const GestionCategorias = () => {
     }
   };
 
-  const handlerEliminarCategoria = async (cat) => {
-    const confirmar = window.confirm(
-      `¿Eliminar la categoría "${cat.nombre}"?`,
-    );
-    if (!confirmar) return;
+  const handlerEliminarCategoria = async () => {
+    if (!categoriaAEliminar) return;
+    const cat = categoriaAEliminar;
+    setCategoriaAEliminar(null);
 
     try {
       dispatch(aumentarContadorPeticiones());
@@ -267,7 +268,7 @@ const GestionCategorias = () => {
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      onClick={() => handlerEliminarCategoria(cat)}
+                      onClick={() => setCategoriaAEliminar(cat)}
                     >
                       Eliminar
                     </Button>
@@ -278,6 +279,15 @@ const GestionCategorias = () => {
           </Col>
         ))}
       </Row>
+
+      <ModalConfirmacion
+        mostrar={Boolean(categoriaAEliminar)}
+        titulo="Eliminar categoría"
+        mensaje={`¿Eliminar la categoría "${categoriaAEliminar?.nombre || ""}"?`}
+        textoConfirmar="Sí, eliminar"
+        onCancelar={() => setCategoriaAEliminar(null)}
+        onConfirmar={handlerEliminarCategoria}
+      />
     </div>
   );
 };

@@ -18,6 +18,7 @@ import {
 } from "../redux/features/loadingSlice.js";
 import { cancelarVencimiento } from "../utils/sesion.js";
 import { extraerMensajeError } from "../utils/utils.js";
+import ModalConfirmacion from "./ModalConfirmacion.jsx";
 
 const GestionUsuarios = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const GestionUsuarios = () => {
   const [esAdminEdit, setEsAdminEdit] = useState(false);
   const [puedeModerarEdit, setPuedeModerarEdit] = useState(false);
   const [esPremiumEdit, setEsPremiumEdit] = useState(false);
+  const [usuarioAEliminar, setUsuarioAEliminar] = useState(null);
 
   const obtenerNombreRol = (rolCampo) => {
     if (!rolCampo) return "";
@@ -218,14 +220,11 @@ const GestionUsuarios = () => {
     }
   };
 
-  const handleEliminarUsuario = async (u) => {
+  const handleEliminarUsuario = async () => {
+    if (!usuarioAEliminar) return;
+    const u = usuarioAEliminar;
     const esPropio = String(u._id) === String(idUsuarioActual);
-    const confirmar = window.confirm(
-      esPropio
-        ? "¿Estás seguro de dar de baja tu propia cuenta? Se cerrará tu sesión y se cancelarán tus publicaciones."
-        : `¿Estás seguro de dar de baja al usuario "${u.name}" (${u.email})? Se cancelarán sus publicaciones activas.`,
-    );
-    if (!confirmar) return;
+    setUsuarioAEliminar(null);
 
     try {
       dispatch(aumentarContadorPeticiones());
@@ -497,7 +496,7 @@ const GestionUsuarios = () => {
                       <Button
                         variant="outline-danger"
                         size="sm"
-                        onClick={() => handleEliminarUsuario(u)}
+                        onClick={() => setUsuarioAEliminar(u)}
                       >
                         Eliminar
                       </Button>
@@ -509,6 +508,20 @@ const GestionUsuarios = () => {
           );
         })}
       </Row>
+
+      <ModalConfirmacion
+        mostrar={Boolean(usuarioAEliminar)}
+        titulo="Dar de baja usuario"
+        mensaje={
+          usuarioAEliminar &&
+          String(usuarioAEliminar._id) === String(idUsuarioActual)
+            ? "¿Estás seguro de dar de baja tu propia cuenta? Se cerrará tu sesión y se cancelarán tus publicaciones."
+            : `¿Estás seguro de dar de baja al usuario "${usuarioAEliminar?.name || ""}" (${usuarioAEliminar?.email || ""})? Se cancelarán sus publicaciones activas.`
+        }
+        textoConfirmar="Sí, dar de baja"
+        onCancelar={() => setUsuarioAEliminar(null)}
+        onConfirmar={handleEliminarUsuario}
+      />
     </div>
   );
 };

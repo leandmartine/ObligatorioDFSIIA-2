@@ -19,6 +19,7 @@ import {
   borrarPublicacionApi,
   actualizarPublicacionApi,
 } from "../services/publicacionesServices.js";
+import ModalConfirmacion from "./ModalConfirmacion.jsx";
 
 const Publicacion = ({
   publicacion,
@@ -38,6 +39,7 @@ const Publicacion = ({
   const puedeEliminar = !esMarketplace || esAutor || esAdmin;
 
   const [editando, setEditando] = useState(false);
+  const [mostrarConfirmarBorrado, setMostrarConfirmarBorrado] = useState(false);
   const [tituloEditando, setTituloEditando] = useState(
     publicacion?.titulo || "",
   );
@@ -103,10 +105,7 @@ const Publicacion = ({
   };
 
   const borrarHandler = async () => {
-    const confirmar = window.confirm(
-      `¿Estás seguro de eliminar la publicación "${publicacion?.titulo}"?`,
-    );
-    if (!confirmar) return;
+    setMostrarConfirmarBorrado(false);
 
     try {
       dispatch(aumentarContadorPeticiones());
@@ -260,7 +259,7 @@ const Publicacion = ({
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      onClick={borrarHandler}
+                      onClick={() => setMostrarConfirmarBorrado(true)}
                     >
                       Eliminar
                     </Button>
@@ -271,6 +270,15 @@ const Publicacion = ({
           )}
         </Col>
       </Row>
+
+      <ModalConfirmacion
+        mostrar={mostrarConfirmarBorrado}
+        titulo="Eliminar publicación"
+        mensaje={`¿Estás seguro de eliminar la publicación "${publicacion?.titulo}"?`}
+        textoConfirmar="Sí, eliminar"
+        onCancelar={() => setMostrarConfirmarBorrado(false)}
+        onConfirmar={borrarHandler}
+      />
     </div>
   );
 };

@@ -15,6 +15,7 @@ import {
   disminuirContadorPeticiones,
 } from "../redux/features/loadingSlice.js";
 import { extraerMensajeError } from "../utils/utils.js";
+import ModalConfirmacion from "./ModalConfirmacion.jsx";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const Menu = () => {
 
   // Estado para modal "Mi Perfil" (GET /usuarios/:id, PATCH /usuarios/:id, DELETE /usuarios/:id)
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
+  const [mostrarConfirmarBaja, setMostrarConfirmarBaja] = useState(false);
   const [nombreEdit, setNombreEdit] = useState(nombreUsuario || "");
   const [passwordEdit, setPasswordEdit] = useState("");
   const [rolActual, setRolActual] = useState("");
@@ -105,10 +107,7 @@ const Menu = () => {
   };
 
   const handleEliminarMiCuenta = async () => {
-    const confirmar = window.confirm(
-      "¿Estás seguro de que querés dar de baja tu cuenta? Tus publicaciones activas serán canceladas y se cerrará tu sesión.",
-    );
-    if (!confirmar) return;
+    setMostrarConfirmarBaja(false);
 
     try {
       dispatch(aumentarContadorPeticiones());
@@ -220,7 +219,7 @@ const Menu = () => {
                 variant="outline-danger"
                 size="sm"
                 type="button"
-                onClick={handleEliminarMiCuenta}
+                onClick={() => setMostrarConfirmarBaja(true)}
               >
                 Eliminar mi cuenta
               </Button>
@@ -241,6 +240,15 @@ const Menu = () => {
           </Modal.Footer>
         </Form>
       </Modal>
+
+      <ModalConfirmacion
+        mostrar={mostrarConfirmarBaja}
+        titulo="Dar de baja mi cuenta"
+        mensaje="¿Estás seguro de que querés dar de baja tu cuenta? Tus publicaciones activas serán canceladas y se cerrará tu sesión."
+        textoConfirmar="Sí, eliminar mi cuenta"
+        onCancelar={() => setMostrarConfirmarBaja(false)}
+        onConfirmar={handleEliminarMiCuenta}
+      />
     </>
   );
 };
