@@ -132,7 +132,7 @@ const Menu = () => {
         <Container>
           <Row className="align-items-center">
             <Col md={5} className="text-md-start text-center mb-2 mb-md-0">
-              <h4 className="mb-0 fw-bold">Gestión de Publicaciones</h4>
+              <h4 className="mb-0 fw-bold">Marketplace ORT</h4>
             </Col>
             <Col
               md={7}
