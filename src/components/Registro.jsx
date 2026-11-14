@@ -37,8 +37,6 @@ const esquemaRegistro = Yup.object({
   repetirPassword: Yup.string()
     .required("Debe repetir la contraseña")
     .oneOf([Yup.ref("password")], "Las contraseñas deben coincidir"),
-  esAdmin: Yup.boolean().required(),
-  puedeModerar: Yup.boolean(),
 });
 
 const Registro = () => {
@@ -76,8 +74,6 @@ const Registro = () => {
       role: "",
       password: "",
       repetirPassword: "",
-      esAdmin: false,
-      puedeModerar: false,
     },
     validationSchema: esquemaRegistro,
     validateOnMount: true,
@@ -93,8 +89,8 @@ const Registro = () => {
           phone: Number(valores.phone),
           role: valores.role.trim(),
           password: valores.password,
-          esAdmin: Boolean(valores.esAdmin),
-          puedeModerar: Boolean(valores.puedeModerar),
+          esAdmin: false,
+          puedeModerar: false,
         };
 
         const resultado = await registerApi(datosEnvio);
@@ -289,29 +285,6 @@ const Registro = () => {
                     {formik.errors.repetirPassword}
                   </Form.Control.Feedback>
                 </Form.Group>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col xs={6}>
-                <Form.Check
-                  type="checkbox"
-                  id="esAdmin"
-                  name="esAdmin"
-                  label="Es Administrador"
-                  checked={formik.values.esAdmin}
-                  onChange={formik.handleChange}
-                />
-              </Col>
-              <Col xs={6}>
-                <Form.Check
-                  type="checkbox"
-                  id="puedeModerar"
-                  name="puedeModerar"
-                  label="Puede Moderar"
-                  checked={formik.values.puedeModerar}
-                  onChange={formik.handleChange}
-                />
               </Col>
             </Row>
 
