@@ -10,7 +10,6 @@ import {
   actualizarUsuarioApi,
   eliminarUsuarioApi,
 } from "../services/usuariosServices.js";
-import { obtenerRolesApi } from "../services/authServices.js";
 import {
   aumentarContadorPeticiones,
   disminuirContadorPeticiones,
@@ -31,10 +30,9 @@ const Menu = () => {
 
   // Estado para modal "Mi Perfil" (GET /usuarios/:id, PATCH /usuarios/:id, DELETE /usuarios/:id)
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
-  const [rolesDisponibles, setRolesDisponibles] = useState([]);
   const [nombreEdit, setNombreEdit] = useState(nombreUsuario || "");
-  const [rolEdit, setRolEdit] = useState("");
   const [passwordEdit, setPasswordEdit] = useState("");
+  const [rolActual, setRolActual] = useState("");
   const [telefonoActual, setTelefonoActual] = useState("");
 
   const handlerLogout = () => {
@@ -52,24 +50,15 @@ const Menu = () => {
 
     try {
       dispatch(aumentarContadorPeticiones());
-      const [resUsuario, resRoles] = await Promise.all([
-        obtenerUsuarioPorIdApi(idUsuario),
-        obtenerRolesApi(),
-      ]);
-
-      const listaRoles = resRoles?.roles || [];
-      setRolesDisponibles(listaRoles);
+      const resUsuario = await obtenerUsuarioPorIdApi(idUsuario);
 
       if (resUsuario?.usuario) {
         const u = resUsuario.usuario;
         setNombreEdit(u.name || "");
         setTelefonoActual(u.phone || "");
-        const rolNombre =
-          typeof u.role === "object" && u.role?.nombre
-            ? u.role.nombre
-            : listaRoles.find((r) => String(r._id) === String(u.role))?.nombre ||
-              "";
-        setRolEdit(rolNombre);
+        setRolActual(
+          typeof u.role === "object" && u.role?.nombre ? u.role.nombre : "",
+        );
       }
     } catch {
       // Mantenemos datos locales si falla la consulta
@@ -92,13 +81,10 @@ const Menu = () => {
 
     try {
       dispatch(aumentarContadorPeticiones());
-      // Mapeado exactamente a updateUsuarioSchema en backend
+      // El propio usuario solo puede editar su nombre y/o contraseña
       const payload = {
         name: nombreLimpio,
       };
-      if (rolEdit.trim().length >= 2) {
-        payload.role = rolEdit.trim();
-      }
       if (passwordEdit.length >= 6) {
         payload.password = passwordEdit;
       }
@@ -195,6 +181,11 @@ const Menu = () => {
                   <strong>Teléfono:</strong> {telefonoActual}
                 </div>
               )}
+              {rolActual && (
+                <div>
+                  <strong>Rol asignado:</strong> {rolActual}
+                </div>
+              )}
             </div>
 
             <Form.Group className="mb-3" controlId="perfilNombre">
@@ -206,22 +197,6 @@ const Menu = () => {
                 onChange={(e) => setNombreEdit(e.target.value)}
                 placeholder="Tu nombre (3 a 30 caracteres)"
               />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="perfilRol">
-              <Form.Label className="small mb-1">Rol</Form.Label>
-              <Form.Select
-                size="sm"
-                value={rolEdit}
-                onChange={(e) => setRolEdit(e.target.value)}
-              >
-                <option value="">Seleccioná tu rol...</option>
-                {rolesDisponibles.map((r) => (
-                  <option key={r._id || r.nombre} value={r.nombre}>
-                    {r.nombre}
-                  </option>
-                ))}
-              </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="perfilPassword">
