@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Badge from "react-bootstrap/Badge";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Button, Badge, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import { modificarPublicacionSlice } from "../redux/features/publicacionesSlice.js";

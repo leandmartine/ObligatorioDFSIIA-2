@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import ProgressBar from "react-bootstrap/ProgressBar";
-import Badge from "react-bootstrap/Badge";
+import { ProgressBar, Badge } from "react-bootstrap";
 
 const LIMITE_PLUS = 4;
 

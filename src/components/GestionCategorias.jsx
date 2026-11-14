@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import {
@@ -16,6 +13,7 @@ import {
   disminuirContadorPeticiones,
 } from "../redux/features/loadingSlice.js";
 import {
+  obtenerCategoriaPorIdApi,
   crearCategoriaApi,
   actualizarCategoriaApi,
   borrarCategoriaApi,
@@ -100,10 +98,19 @@ const GestionCategorias = () => {
     }
   };
 
-  const iniciarEdicion = (cat) => {
+  const iniciarEdicion = async (cat) => {
     setIdEditando(cat._id);
     setNombreEditando(cat.nombre || "");
     setDescripcionEditando(cat.descripcion || "");
+    try {
+      const data = await obtenerCategoriaPorIdApi(cat._id);
+      if (data?.categoria) {
+        setNombreEditando(data.categoria.nombre || "");
+        setDescripcionEditando(data.categoria.descripcion || "");
+      }
+    } catch {
+      // Si falla la consulta puntual, mantenemos los valores en memoria
+    }
   };
 
   const guardarEdicion = async (idCat) => {

@@ -1,8 +1,5 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
-import Alert from "react-bootstrap/Alert";
+import { Button, Form, Card, Alert } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";

@@ -34,6 +34,13 @@ export const obtenerCategoriasApi = async (signal) => {
   return response.data;
 };
 
+export const obtenerCategoriaPorIdApi = async (idCategoria, signal) => {
+  const response = await api.get(`/categoria/${idCategoria}`, {
+    signal: signal,
+  });
+  return response.data;
+};
+
 export const crearCategoriaApi = async (categoria) => {
   const response = await api.post("/categoria", categoria);
   return response.data;

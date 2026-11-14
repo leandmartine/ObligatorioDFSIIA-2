@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Badge from "react-bootstrap/Badge";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Button, Form, Badge, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import {
@@ -24,9 +20,22 @@ import {
   actualizarPublicacionApi,
 } from "../services/publicacionesServices.js";
 
-const Publicacion = ({ publicacion }) => {
+const Publicacion = ({
+  publicacion,
+  esMarketplace = false,
+  onVerDetalle,
+}) => {
   const dispatch = useDispatch();
   const obtenerNombreCategoria = useObtenerNombreCategoria();
+
+  const idUsuario = localStorage.getItem("idUsuario");
+  const esAdmin = localStorage.getItem("esAdmin") === "true";
+  const puedeModerar = localStorage.getItem("puedeModerar") === "true";
+
+  const esAutor =
+    Boolean(idUsuario) && String(publicacion?.autor) === String(idUsuario);
+  const puedeEditar = !esMarketplace || esAutor || esAdmin || puedeModerar;
+  const puedeEliminar = !esMarketplace || esAutor || esAdmin;
 
   const [editando, setEditando] = useState(false);
   const [tituloEditando, setTituloEditando] = useState(
@@ -116,7 +125,7 @@ const Publicacion = ({ publicacion }) => {
   };
 
   return (
-    <div className="tarjeta">
+    <div className="tarjeta h-100">
       <Row className="align-items-center">
         <Col md={3} className="text-center mb-2 mb-md-0">
           {publicacion?.imagenUrl ? (
@@ -147,9 +156,14 @@ const Publicacion = ({ publicacion }) => {
               <Badge bg="secondary">
                 {obtenerNombreCategoria(publicacion?.categoria)}
               </Badge>
-              <Badge bg={publicacion?.activa ? "success" : "warning"} text={publicacion?.activa ? "light" : "dark"}>
-                {publicacion?.activa ? "Disponible" : "Pendiente de Revisión"}
-              </Badge>
+              {!esMarketplace && (
+                <Badge
+                  bg={publicacion?.activa ? "success" : "warning"}
+                  text={publicacion?.activa ? "light" : "dark"}
+                >
+                  {publicacion?.activa ? "Disponible" : "Pendiente de Revisión"}
+                </Badge>
+              )}
               <Badge bg="light" text="dark" className="border">
                 {publicacion?.nuevo ? "Nuevo" : "Usado"}
               </Badge>
@@ -157,6 +171,9 @@ const Publicacion = ({ publicacion }) => {
                 <Badge bg="info" text="dark">
                   Acepta Permuta
                 </Badge>
+              )}
+              {esMarketplace && esAutor && (
+                <Badge bg="dark">Tu publicación</Badge>
               )}
             </div>
             <span className="text-muted small">
@@ -220,21 +237,34 @@ const Publicacion = ({ publicacion }) => {
                 <strong className="text-primary">
                   {publicacion?.pesosUy ? "$U" : "USD"} {publicacion?.precio}
                 </strong>
-                <div className="d-flex gap-2">
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={handlerEditar}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={borrarHandler}
-                  >
-                    Eliminar
-                  </Button>
+                <div className="d-flex gap-2 flex-wrap">
+                  {esMarketplace && onVerDetalle && (
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => onVerDetalle(publicacion)}
+                    >
+                      Ver detalle
+                    </Button>
+                  )}
+                  {puedeEditar && (
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={handlerEditar}
+                    >
+                      Editar
+                    </Button>
+                  )}
+                  {puedeEliminar && (
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={borrarHandler}
+                    >
+                      Eliminar
+                    </Button>
+                  )}
                 </div>
               </div>
             </>

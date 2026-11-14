@@ -41,9 +41,24 @@ export const obtenerUsuarioPorIdApi = async (idUsuario, signal) => {
   return response.data;
 };
 
+export const crearUsuarioApi = async (datosUsuario) => {
+  const response = await api.post("/usuarios", datosUsuario);
+  return response.data;
+};
+
 export const altaUsuarioPremiumApi = async (idUsuario) => {
   const response = await api.patch(`/usuarios/altaPremium/${idUsuario}`, {
     esPremium: true,
   });
+  return response.data;
+};
+
+export const actualizarUsuarioApi = async (idUsuario, datosUsuario) => {
+  const response = await api.patch(`/usuarios/${idUsuario}`, datosUsuario);
+  return response.data;
+};
+
+export const eliminarUsuarioApi = async (idUsuario) => {
+  const response = await api.delete(`/usuarios/${idUsuario}`);
   return response.data;
 };

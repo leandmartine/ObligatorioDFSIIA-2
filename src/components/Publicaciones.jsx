@@ -1,9 +1,7 @@
 import React, { useId } from "react";
 import Publicacion from "./Publicacion.jsx";
 import { useSelector, useDispatch } from "react-redux";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Form, Row, Col } from "react-bootstrap";
 import {
   filtrarPublicacionesPorSearch,
   modificarSearchSlice,

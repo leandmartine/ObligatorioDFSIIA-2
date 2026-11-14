@@ -4,6 +4,7 @@ const initialState = {
   listaPublicaciones: [],
   search: "",
   categoriaFiltro: "",
+  versionMarketplace: 0,
 };
 
 const publicacionesSlice = createSlice({
@@ -25,6 +26,7 @@ const publicacionesSlice = createSlice({
           publicacionEncontrada.precio = precio;
         }
       }
+      state.versionMarketplace += 1;
     },
     modificarPublicacionSlice: (state, action) => {
       const publicacionActualizada = action.payload;
@@ -34,16 +36,22 @@ const publicacionesSlice = createSlice({
       if (indice !== -1) {
         state.listaPublicaciones[indice] = publicacionActualizada;
       }
+      state.versionMarketplace += 1;
     },
     agregarPublicacionSlice: (state, action) => {
       const publicacion = action.payload;
       state.listaPublicaciones.push(publicacion);
+      state.versionMarketplace += 1;
     },
     borrarPublicacionSlice: (state, action) => {
       const id = action.payload;
       state.listaPublicaciones = state.listaPublicaciones.filter(
         (pub) => pub._id !== id,
       );
+      state.versionMarketplace += 1;
+    },
+    notificarCambioMarketplaceSlice: (state) => {
+      state.versionMarketplace += 1;
     },
     modificarSearchSlice: (state, action) => {
       const searchAux = action.payload;
@@ -62,6 +70,7 @@ export const {
   modificarPublicacionSlice,
   agregarPublicacionSlice,
   borrarPublicacionSlice,
+  notificarCambioMarketplaceSlice,
   modificarSearchSlice,
   modificarCategoriaFiltroSlice,
 } = publicacionesSlice.actions;

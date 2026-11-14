@@ -34,8 +34,16 @@ export const obtenerPublicacionesUsuarioApi = async (signal) => {
   return response.data;
 };
 
-export const obtenerPublicacionesApi = async (signal) => {
+export const obtenerPublicacionesApi = async (page = 1, signal) => {
   const response = await api.get("/publicacion", {
+    params: { page },
+    signal: signal,
+  });
+  return response.data;
+};
+
+export const obtenerPublicacionPorIdApi = async (idPublicacion, signal) => {
+  const response = await api.get(`/publicacion/${idPublicacion}`, {
     signal: signal,
   });
   return response.data;

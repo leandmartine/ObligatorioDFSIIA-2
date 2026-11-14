@@ -2,11 +2,7 @@ import { useState, useEffect, useId, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Alert from "react-bootstrap/Alert";
+import { Form, Button, Row, Col, Alert } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import { agregarPublicacionSlice } from "../redux/features/publicacionesSlice.js";

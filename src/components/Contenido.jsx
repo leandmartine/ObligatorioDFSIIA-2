@@ -8,7 +8,9 @@ import MiGrafica from "./MiGrafica.jsx";
 import InformeUso from "./InformeUso.jsx";
 import CambioPlan from "./CambioPlan.jsx";
 import GestionCategorias from "./GestionCategorias.jsx";
+import GestionUsuarios from "./GestionUsuarios.jsx";
 import ModeracionPublicaciones from "./ModeracionPublicaciones.jsx";
+import PublicacionesMarketplace from "./PublicacionesMarketplace.jsx";
 
 import { obtenerPublicacionesUsuarioApi } from "../services/publicacionesServices.js";
 import { obtenerCategoriasApi } from "../services/categoriasServices.js";
@@ -95,6 +97,10 @@ const Contenido = () => {
         {puedeModerar && <ModeracionPublicaciones />}
 
         {esAdmin && <GestionCategorias />}
+
+        {esAdmin && <GestionUsuarios />}
+
+        <PublicacionesMarketplace />
       </Container>
     </div>
   );
